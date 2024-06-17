@@ -10,14 +10,14 @@ ${requirements}
 '''
 interface Schema {
   page1: {
-    title: string; // 不超过10个字
+    title: string; // 5-20字
   };
   page2: {
-    title: string; // 不超过10个字
-    subtitle: string; // 不超过10个字
-    content: string; // 不超过100字
-    list: string[5]; // 每个不超过20字
-  };
+    title: string; // 5-20字
+    subtitle: string; // 5-20字
+    content: string; // 20-100字
+    list: string[5]; // 5-20字
+  }; 
 }
 '''`;
 };

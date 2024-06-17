@@ -1,12 +1,12 @@
 import pptxgen from "pptxgenjs";
 
-export const generatePPT = () => {
+export const generatePPT = (data) => {
   let pres = new pptxgen();
 
-  generatePage1(pres, {});
-  generatePage2(pres, {});
+  generatePage1(pres, data);
+  generatePage2(pres, data);
 
-  pres.writeFile({ fileName: `chatppt-${new Date().getMilliseconds()}.pptx` });
+  pres.writeFile({ fileName: `chatppt-${Date.now()}.pptx` });
 };
 
 const generatePage1 = (pres, data) => {
@@ -16,18 +16,27 @@ const generatePage1 = (pres, data) => {
   page1.background = { color: "003D4F" };
 
   // 添加大标题文本框
-  page1.addText("Thoughtworks \n" + "presentation deck\n", {
-    x: 0.5,
-    y: "45%",
-    w: 9,
-    h: 1,
-    fontFace: "Bitter",
-    fontSize: 44,
-    bold: true,
-    color: "FFFFFF",
-  });
+  page1.addText(
+    data?.page1?.title || "Thoughtworks \n" + "presentation deck\n",
+    {
+      x: 0.5,
+      y: "45%",
+      w: 9,
+      h: 1,
+      fontFace: "Bitter",
+      fontSize: 44,
+      bold: true,
+      color: "FFFFFF",
+    },
+  );
 
-  page1.addImage({ path: "./twlogo.png", x: 0.5, y: "90%", w: 2.1, h: 0.3 });
+  page1.addImage({
+    path: "/twlogo.png",
+    x: 0.5,
+    y: "90%",
+    w: 2.1,
+    h: 0.3,
+  });
 };
 
 const generatePage2 = (pres, data) => {
@@ -44,7 +53,7 @@ const generatePage2 = (pres, data) => {
   ];
 
   // Add title
-  page2.addText("Click to add title for content slide", {
+  page2.addText(data?.page2?.title || "add title for content slide", {
     x: 0.5,
     y: 0.5,
     w: "50%",
@@ -56,7 +65,7 @@ const generatePage2 = (pres, data) => {
   });
 
   // Add subtitle
-  page2.addText("Click to add subtitle", {
+  page2.addText(data?.page2?.subtitle || "add subtitle", {
     x: 0.5,
     y: 1.0,
     w: "50%",
@@ -67,18 +76,15 @@ const generatePage2 = (pres, data) => {
   });
 
   // Add main text block
-  page2.addText(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    {
-      x: 0.5,
-      y: 1.5,
-      w: "50%",
-      h: 1.5,
-      fontFace: "Inter",
-      fontSize: 16,
-      color: "000000",
-    },
-  );
+  page2.addText(data?.page2?.content || "main content", {
+    x: 0.5,
+    y: 1.5,
+    w: "50%",
+    h: 1.5,
+    fontFace: "Inter",
+    fontSize: 16,
+    color: "000000",
+  });
 
   // Add icon and text blocks
   let icons = ["🌐", "⚑", "🌐", "⚑", "🌐"];
@@ -98,7 +104,8 @@ const generatePage2 = (pres, data) => {
       valign: "middle",
     });
     page2.addText(
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+      data?.page2?.list[i] ||
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
       {
         x: 6.0,
         y: `${y}%`,
