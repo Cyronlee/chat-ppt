@@ -1,23 +1,29 @@
 export const generatePrompt = (requirements) => {
-  return `帮我写一个PPT，我的需求如下：
-  
+  return `Help me to write a PPT, here is my requirement:
 '''
 ${requirements}
 '''
 
-然后将PPT内容转换为实现下方Schema的json字符串
-
+Then convert the PPT content into a json string that implements the following Schema:
 '''
-interface Schema {
-  page1: {
-    title: string; // 5-20字
-  };
-  page2: {
-    title: string; // 5-20字
-    subtitle: string; // 5-20字
-    content: string; // 20-100字
-    list: string[5]; // 5-20字
-  }; 
+interface SlideSchema {
+  title: string;
+  pages: SlidePage[];
+}
+
+type SlidePage = ContentPage | ListPage;
+
+interface ContentPage {
+  title: string;
+  subtitle: string;
+  content: string; // around 150 words
+}
+
+interface ListPage {
+  title: string;
+  subtitle: string;
+  content: string; // around 50 words
+  list: string[5];
 }
 '''`;
 };

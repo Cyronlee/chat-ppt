@@ -4,7 +4,16 @@ export const generatePPT = (data) => {
   let pres = new pptxgen();
 
   generatePage1(pres, data);
-  generatePage2(pres, data);
+
+  data.pages.forEach((pageData) => {
+    if (pageData.list) {
+      generateListPage(pres, pageData);
+    } else {
+      generateContentPage(pres, pageData);
+    }
+  });
+
+  generateEndingPage(pres);
 
   pres.writeFile({ fileName: `chatppt-${Date.now()}.pptx` });
 };
@@ -16,19 +25,16 @@ const generatePage1 = (pres, data) => {
   page1.background = { color: "003D4F" };
 
   // 添加大标题文本框
-  page1.addText(
-    data?.page1?.title || "Thoughtworks \n" + "presentation deck\n",
-    {
-      x: 0.5,
-      y: "45%",
-      w: 9,
-      h: 1,
-      fontFace: "Bitter",
-      fontSize: 44,
-      bold: true,
-      color: "FFFFFF",
-    },
-  );
+  page1.addText(data?.title || "Thoughtworks \n" + "presentation deck\n", {
+    x: 0.5,
+    y: "45%",
+    w: 9,
+    h: 1,
+    fontFace: "Bitter",
+    fontSize: 44,
+    bold: true,
+    color: "FFFFFF",
+  });
 
   page1.addImage({
     path: "/twlogo.png",
@@ -39,8 +45,46 @@ const generatePage1 = (pres, data) => {
   });
 };
 
-const generatePage2 = (pres, data) => {
-  let page2 = pres.addSlide();
+const generateContentPage = (pres, pageData) => {
+  let contentPage = pres.addSlide();
+
+  // Add title
+  contentPage.addText(pageData?.title || "add title for content slide", {
+    x: 0.5,
+    y: 0.5,
+    w: "90%",
+    h: 1,
+    fontFace: "Bitter",
+    fontSize: 24,
+    bold: true,
+    color: "000000",
+  });
+
+  // Add subtitle
+  contentPage.addText(pageData?.subtitle || "add subtitle", {
+    x: 0.5,
+    y: 1.0,
+    w: "90%",
+    h: 0.5,
+    fontFace: "Inter",
+    fontSize: 16,
+    bold: true,
+    color: "000000",
+  });
+
+  // Add main text block
+  contentPage.addText(pageData?.content || "main content", {
+    x: 0.5,
+    y: 1.5,
+    w: "90%",
+    fontFace: "Inter",
+    fontSize: 16,
+    color: "000000",
+  });
+};
+
+const generateListPage = (pres, pageData) => {
+  let listPage = pres.addSlide();
 
   // Define colors used
   let colors = [
@@ -53,7 +97,7 @@ const generatePage2 = (pres, data) => {
   ];
 
   // Add title
-  page2.addText(data?.page2?.title || "add title for content slide", {
+  listPage.addText(pageData?.title || "add title for content slide", {
     x: 0.5,
     y: 0.5,
     w: "50%",
@@ -65,7 +109,7 @@ const generatePage2 = (pres, data) => {
   });
 
   // Add subtitle
-  page2.addText(data?.page2?.subtitle || "add subtitle", {
+  listPage.addText(pageData?.subtitle || "add subtitle", {
     x: 0.5,
     y: 1.0,
     w: "50%",
@@ -76,7 +120,7 @@ const generatePage2 = (pres, data) => {
   });
 
   // Add main text block
-  page2.addText(data?.page2?.content || "main content", {
+  listPage.addText(pageData?.content || "main content", {
     x: 0.5,
     y: 1.5,
     w: "50%",
@@ -90,7 +134,7 @@ const generatePage2 = (pres, data) => {
   let icons = ["🌐", "⚑", "🌐", "⚑", "🌐"];
   for (let i = 0; i < icons.length; i++) {
     let y = 20 * i;
-    page2.addText(icons[i], {
+    listPage.addText(icons[i], {
       x: 5.5,
       y: `${y}%`,
       w: 0.5,
@@ -103,8 +147,8 @@ const generatePage2 = (pres, data) => {
       align: "center",
       valign: "middle",
     });
-    page2.addText(
-      data?.page2?.list[i] ||
+    listPage.addText(
+      pageData?.list[i] ||
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
       {
         x: 6.0,
@@ -119,4 +163,23 @@ const generatePage2 = (pres, data) => {
       },
     );
   }
+};
+
+const generateEndingPage = (pres) => {
+  let page1 = pres.addSlide();
+
+  // 设置幻灯片标题
+  page1.background = { color: "003D4F" };
+
+  // 添加大标题文本框
+  page1.addText("Thank you for your time!", {
+    x: 0.5,
+    y: "45%",
+    w: 9,
+    h: 1,
+    fontFace: "Bitter",
+    fontSize: 44,
+    bold: true,
+    color: "FFFFFF",
+  });
 };
